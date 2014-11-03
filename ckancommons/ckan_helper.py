@@ -59,8 +59,6 @@ class CkanAPIWrapper():
         package_update_data
         
         '''
-        print "package update:" + str(dataset) 
-
         assert dataset
         dataset_dict = dataset.tojson_without_resource()
         data_string = urllib.quote(json.dumps(dataset_dict))
@@ -95,8 +93,6 @@ class CkanAPIWrapper():
      
     def resource_create(self, resource):
         assert resource
-        print "create resource:" + str(resource) 
-
         url = self.url + "/api/action/resource_create"
         
         if u'url_type' in resource and resource[u'url_type'] == u'upload':
@@ -234,8 +230,7 @@ class CkanAPIWrapper():
         ids = self.get_all_package_ids()
         
         dataset_num = len(ids)        
-        print 'number of datasets: %d' % (len(ids),)
-        
+
         for i, dataset_id in enumerate(ids, start=1):
             print '[%d / %d] deleting dataset with id %s' % (i, dataset_num, dataset_id,)
             
