@@ -201,6 +201,17 @@ class CkanAPIWrapper():
             found = False
             
         return found, id_resource
+
+    
+    def resource_search_by_url(self, url, package_id):
+        assert url
+        
+        package = self.get_package(package_id)
+        
+        for resource in package['resources']:
+            if resource['url'] == url:
+                return True, resource['id']
+        return False, None
         
 
     def package_search_by_name(self, dataset):
@@ -235,7 +246,7 @@ class CkanAPIWrapper():
             print '[%d / %d] deleting dataset with id %s' % (i, dataset_num, dataset_id,)
             
             try:
-                self._package_delete(dataset_id)
+                self.package_delete(dataset_id)
                 print 'dataset deleted: %s' % (dataset_id,)
             except urllib2.HTTPError, e:
                 print "error: " + str(e)
