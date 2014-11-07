@@ -354,6 +354,17 @@ class CkanAPIWrapper():
                 break
             
         return modified
+    
+    
+    def get_dataset_field(self, dataset): 
+        result = None
+
+        for e in dataset.extras:
+            if e['key'] == 'dataset' :
+                result = e['value']
+                break
+            
+        return result
 
     
     def compare_dataset_by_modified(self, dataset):
