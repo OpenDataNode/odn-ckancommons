@@ -32,7 +32,7 @@ def load_from_resource_dict(resource):
 def resource_create_update_with_upload(dest_ckan, resource, package_id):
         resource_to_create_update = load_from_resource_dict(resource)
         found, resource_id = dest_ckan.resource_search_by_url(resource['url'], package_id)
-                    
+
         if found:
             resource_to_create_update['id'] = resource_id
             dest_ckan.resource_update(resource_to_create_update)
@@ -51,23 +51,25 @@ class JSON_Dataset():
         self.resources = []
         # license is creative commons by default 
         self.license = 'cc-by'
-   
+        self.owner_org = []
+
+
     def tostring(self):
-        return   u"[%s] name: [%s] title: [%s] notes: [%s] author: [%s] extras: [%s] resource: [%s]" % (self.__class__.__name__, self.name, self.title , self.notes , self.author, self.extras, self.resources)  
-        
+        return   u"[%s] name: [%s] title: [%s] notes: [%s] author: [%s] extras: [%s] resource: [%s] owner_org:[%s]" % (self.__class__.__name__, self.name, self.title , self.notes , self.author, self.extras, self.resources, self.owner_org )
+
     def tojson_without_resource(self):
-        return { "name" : self.name, "title" :  self.title, "notes": self.notes, "author": self.author, "extras": self.extras , "resources" : [], "license_id"  : self.license}
-    
+        return { "name" : self.name, "title" :  self.title, "notes": self.notes, "author": self.author, "extras": self.extras , "resources" : [], "license_id" : self.license, "owner_org" : self.owner_org}
+
     def tojson_all(self):
-        return { "name" : self.name, "title" :  self.title, "notes": self.notes, "author": self.author, "extras": self.extras , "license_id"  : self.license, "resources" : self.resources}
+        return { "name" : self.name, "title" :  self.title, "notes": self.notes, "author": self.author, "extras": self.extras , "license_id"  : self.license, "resources": self.resources, "owner_org" : self.owner_org}
 
     def tojson_resource(self):
         if len(self.resources) > 0:
             result = self.resources[0]
         else:
             result = { }
-            
+
         return result
-    
+
     def __str__(self):
         return self.tostring().encode('utf8')

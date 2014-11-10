@@ -386,4 +386,20 @@ class CkanAPIWrapper():
             found = True
             
         return found
-    
+
+
+    def organization_create(self, dataset):
+        assert dataset
+        organizations = [{'key': 'name', 'value': 'comsode'}]
+
+        data_string = urllib.quote(json.dumps(organizations))
+        url = self.url + "/api/action/organization_create"
+        return self.send_request(data_string, url)
+
+    def organization_list(self):
+        url = self.url + "/api/3/action/organization_list"
+        return self.send_request('', url)
+
+    def organization_show(self, id):
+        url = self.url + '/api/3/action/organization_show?id={0}'.format(id)
+        return self.send_request('', url)
