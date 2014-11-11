@@ -418,3 +418,14 @@ class CkanAPIWrapper():
         url = self.url + '/api/action/organization_purge'
         data_string = urllib.quote(json.dumps({'id': org_id}))
         self.send_request(data_string, url)
+
+    def find_organization(self, organization_name):
+            found_organization = False
+            result = None
+            try:
+                result = self.organization_show(organization_name)
+                found_organization = True
+            except Exception as __:
+                found_organization = False
+
+            return found_organization, result
