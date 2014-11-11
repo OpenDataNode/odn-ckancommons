@@ -388,10 +388,9 @@ class CkanAPIWrapper():
         return found
 
 
-    def organization_create(self, dataset):
-        assert dataset
-        organizations = [{'key': 'name', 'value': 'comsode'}]
-
+    def organization_create(self, organization):
+        assert organization
+        organizations = {'name': organization}
         data_string = urllib.quote(json.dumps(organizations))
         url = self.url + "/api/action/organization_create"
         return self.send_request(data_string, url)
@@ -403,3 +402,19 @@ class CkanAPIWrapper():
     def organization_show(self, id):
         url = self.url + '/api/3/action/organization_show?id={0}'.format(id)
         return self.send_request('', url)
+
+    def organization_update(self, organization):
+        assert organization
+        data_string = urllib.quote(json.dumps(organization))
+        url = self.url + "/api/action/organization_update"
+        return self.send_request(data_string, url)
+
+    def organization_delete(self, org_id):
+        assert org_id
+        url = self.url + '/api/action/organization_delete'
+        data_string = urllib.quote(json.dumps({'id': org_id}))
+        self.send_request(data_string, url)
+
+        url = self.url + '/api/action/organization_purge'
+        data_string = urllib.quote(json.dumps({'id': org_id}))
+        self.send_request(data_string, url)
