@@ -6,10 +6,10 @@ from setuptools import setup, find_packages
 version = '0.1.0-SNAPSHOT'
 
 setup(
-    name='ckancommons',
+    name='odn-ckancommons',
     version=version,
     description="""
-    Ckan's commons for development
+    CKAN's commons for development of ODN related extensions
     """,
     long_description="""
     """,
@@ -20,7 +20,7 @@ setup(
     url='',
     license='',
     packages=find_packages(exclude=['examples', 'tests']),
-    namespace_packages=['ckancommons'],
+    namespace_packages=['odn-ckancommons'],
     include_package_data=True,
     zip_safe=False,
     install_requires=[
