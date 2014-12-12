@@ -3,7 +3,7 @@
 '''
 from setuptools import setup, find_packages
 
-version = '0.1.0-SNAPSHOT'
+version = '0.2.0-SNAPSHOT'
 
 setup(
     name='odn-ckancommons',
@@ -20,7 +20,7 @@ setup(
     url='',
     license='',
     packages=find_packages(exclude=['examples', 'tests']),
-    namespace_packages=['odn-ckancommons'],
+    namespace_packages=['odn_ckancommons'],
     include_package_data=True,
     zip_safe=False,
     install_requires=[

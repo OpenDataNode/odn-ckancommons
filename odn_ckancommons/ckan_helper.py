@@ -202,6 +202,18 @@ class CkanAPIWrapper():
             
         return found, id_resource
 
+
+    def get_package_resource_by_name(self, name, package_id):
+        assert name
+        assert package_id
+        
+        package = self.get_package(package_id)
+        
+        for resource in package['resources']:
+            if resource['name'] == name:
+                return True, resource['id']
+        return False, None
+
     
     def resource_search_by_url(self, url, package_id):
         assert url
