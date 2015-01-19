@@ -70,7 +70,7 @@ class CkanAPIWrapper():
         '''
         Changes data of existing (!) package. Can be used to 'reactivate' deleted
         datasets (not permanently deleted) by:
-        package_update_data('package_id_or_name', {'name':'active'})
+        package_update_data('package_id_or_name', {'state':'active'})
         
         !!! this MUST NOT be used to update resources with url_type == 'upload'
         For updating resource data use resource_update_data instead
@@ -121,6 +121,17 @@ class CkanAPIWrapper():
         data_string = urllib.quote(json.dumps(resource))
         return self.send_request(data_string, url)
 
+
+    def resource_delete(self, resource_id):
+        '''Deletes existing resource
+        
+        :param resource_id: resource id
+        :type resource_id: string
+        '''
+        assert resource_id
+        data_string = urllib.quote(json.dumps({'id':resource_id}))
+        url = self.url + "/api/action/resource_delete"
+        return self.send_request(data_string, url)
 
     
     def resource_update_data(self, resource_id, data_to_change):
@@ -441,3 +452,21 @@ class CkanAPIWrapper():
                 found_organization = False
 
             return found_organization, result
+    
+    
+    def delete_resources_not_with_name_in(self, names, package_id):
+        ''' Deletes resources that DO NOT have their name in names list
+        
+        :param names: names of resources NOT to be deleted
+        :type names: list of strings
+        :param package_id: package id or name
+        :type package_id: string
+        '''
+        assert package_id
+        
+        dataset = self.get_package(package_id)
+        resources = dataset['resources']
+        
+        for resource in resources:
+            if resource['name'] not in names:
+                self.resource_delete(resource['id'])
