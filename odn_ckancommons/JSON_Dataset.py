@@ -1,4 +1,5 @@
-RESOURCE_FIELDS = ['url', 'name', 'url_type', 'format', 'description', 'created', 'last_modified']
+RESOURCE_FIELDS = ['url', 'name', 'url_type', 'format', 'description',
+                    'created', 'last_modified', 'mimetype', 'mimetype_inner']
 
 def load_from_dict(package):
     dat = JSON_Dataset()
@@ -35,6 +36,8 @@ def load_from_resource_dict(resource, whitelist_extras=None):
     for par in resource_fields:
         if par in resource and resource[par]:
             res[par] = resource[par].encode('utf8')
+        else:
+            res[par] = ''
     return res
 
 
