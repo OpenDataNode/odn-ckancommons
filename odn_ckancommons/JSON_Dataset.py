@@ -10,9 +10,28 @@ def load_from_dict(package):
     dat.author = package['author']
     dat.extras = package['extras']
     dat.resources = package['resources']
+    dat.tags = prepare_tags(package['tags'])
     # license is creative commons by default 
     dat.license = package['license_id']
     return dat
+
+
+def prepare_tags(tags_dicts):
+    """Makes from the package tags free tags
+
+    :param tags_dicts: tags of dataset
+    :type tags_dicts: list of dictionaries
+    
+    :return: list of free tags
+    """
+    free_tags = []
+    for tag in tags_dicts:
+        free_tag = {
+            'vocabulary_id':None,
+            'name':tag['name']
+        }
+        free_tags.append(free_tag)
+    return free_tags    
 
 
 def load_from_resource_dict(resource, whitelist_extras=None):
@@ -80,6 +99,7 @@ class JSON_Dataset():
         self.author = ''
         self.extras = []
         self.resources = []
+        self.tags = []
         # license is creative commons by default 
         self.license = 'cc-by'
         self.owner_org = []
@@ -90,10 +110,10 @@ class JSON_Dataset():
         return   u"[%s] name: [%s] title: [%s] notes: [%s] author: [%s] extras: [%s] resource: [%s] owner_org:[%s]" % (self.__class__.__name__, self.name, self.title , self.notes , self.author, self.extras, self.resources, self.owner_org)
 
     def tojson_without_resource(self):
-        return { "name" : self.name, "title" :  self.title, "notes": self.notes, "author": self.author, "extras": self.extras, "license_id" : self.license, "owner_org" : self.owner_org, "notes": self.description}
+        return { "name" : self.name, "title" :  self.title, "notes": self.notes, "author": self.author, "extras": self.extras, "license_id" : self.license, "tags": self.tags, "owner_org" : self.owner_org, "notes": self.description}
 
     def tojson_all(self):
-        return { "name" : self.name, "title" :  self.title, "notes": self.notes, "author": self.author, "extras": self.extras , "license_id"  : self.license, "resources": self.resources, "owner_org" : self.owner_org, "notes": self.description}
+        return { "name" : self.name, "title" :  self.title, "notes": self.notes, "author": self.author, "extras": self.extras , "license_id"  : self.license, "resources": self.resources, "tags": self.tags, "owner_org" : self.owner_org, "notes": self.description}
 
     def tojson_resource(self):
         if len(self.resources) > 0:
