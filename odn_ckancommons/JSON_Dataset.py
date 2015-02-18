@@ -13,6 +13,8 @@ def load_from_dict(package):
     dat.tags = prepare_tags(package['tags'])
     # license is creative commons by default 
     dat.license = package['license_id']
+    dat.owner_org = package['owner_org']
+    dat.organization = package['organization']
     return dat
 
 
@@ -104,6 +106,7 @@ class JSON_Dataset():
         self.license = 'cc-by'
         self.owner_org = []
         self.description = ''
+        self.organization = []
 
 
     def tostring(self):
