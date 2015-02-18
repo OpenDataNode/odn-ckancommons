@@ -423,8 +423,12 @@ class CkanAPIWrapper():
         return self.send_request('', url)
 
     def organization_show(self, id):
-        url = self.url + '/api/3/action/organization_show?id={0}'.format(id)
-        return self.send_request('', url)
+        dataset_dict = {
+            'id': id
+        }
+        data_string = urllib.quote(json.dumps(dataset_dict))
+        url = self.url + '/api/action/organization_show'
+        return self.send_request(data_string, url)
 
     def organization_update(self, organization):
         assert organization
