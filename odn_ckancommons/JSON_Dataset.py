@@ -105,7 +105,6 @@ class JSON_Dataset():
         # license is creative commons by default 
         self.license = 'cc-by'
         self.owner_org = []
-        self.description = ''
         self.organization = []
 
 
@@ -113,10 +112,10 @@ class JSON_Dataset():
         return   u"[%s] name: [%s] title: [%s] notes: [%s] author: [%s] extras: [%s] resource: [%s] owner_org:[%s]" % (self.__class__.__name__, self.name, self.title , self.notes , self.author, self.extras, self.resources, self.owner_org)
 
     def tojson_without_resource(self):
-        return { "name" : self.name, "title" :  self.title, "notes": self.notes, "author": self.author, "extras": self.extras, "license_id" : self.license, "tags": self.tags, "owner_org" : self.owner_org, "notes": self.description}
+        return { "name" : self.name, "title" :  self.title, "notes": self.notes, "author": self.author, "extras": self.extras, "license_id" : self.license, "tags": self.tags, "owner_org" : self.owner_org}
 
     def tojson_all(self):
-        return { "name" : self.name, "title" :  self.title, "notes": self.notes, "author": self.author, "extras": self.extras , "license_id"  : self.license, "resources": self.resources, "tags": self.tags, "owner_org" : self.owner_org, "notes": self.description}
+        return { "name" : self.name, "title" :  self.title, "notes": self.notes, "author": self.author, "extras": self.extras , "license_id"  : self.license, "resources": self.resources, "tags": self.tags, "owner_org" : self.owner_org}
 
     def tojson_resource(self):
         if len(self.resources) > 0:
