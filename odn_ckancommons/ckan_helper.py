@@ -508,11 +508,20 @@ class CkanAPIWrapper():
         dataset = self.get_package(package_id)
         resources = dataset['resources']
         
+        errors = []
         for resource in resources:
             if resource['name'] not in names:
                 if self._is_datastore_resource(resource):
                     try:
                         self.datastore_delete(resource['id'])
                     except urllib2.HTTPError, e:
-                        print str(e)
-                self.resource_delete(resource['id'])
+                        msg = 'Failed to delete datastore resource [{0}]: {1}'\
+                                .format(resource['id'], str(e))
+                        errors.append(msg)
+                try:
+                    self.resource_delete(resource['id'])
+                except urllib2.HTTPError, e:
+                    msg = 'Failed to delete resource [{0}]: {1}'\
+                            .format(resource['id'], str(e))
+                    errors.append(msg)
+        return errors
