@@ -68,11 +68,11 @@ def resource_create_update_with_upload(dest_ckan, resource, package_id, whitelis
 
         if found:
             resource_to_create_update['id'] = resource_id
-            dest_ckan.resource_update(resource_to_create_update)
+            return dest_ckan.resource_update(resource_to_create_update)
         else:
             # needs package id to know which package to associate it with
             resource_to_create_update['package_id'] = package_id
-            dest_ckan.resource_create(resource_to_create_update)
+            return dest_ckan.resource_create(resource_to_create_update)
 
 
 def filter_package_extras(dataset_obj, whitelist_extras):

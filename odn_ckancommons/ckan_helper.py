@@ -37,7 +37,7 @@ class CkanAPIWrapper():
     def send_request(self, data_string, url):
         assert url
         response_dict = self._send_request(data_string, url)
-        assert response_dict['success'] is True
+        assert response_dict['success']
         # package_create returns the created package as its result.
         return response_dict['result']
     
@@ -212,6 +212,43 @@ class CkanAPIWrapper():
             found = False
             
         return found, id_resource
+    
+    
+    def _is_datastore_resource(self, resource):
+        return resource.get('url_type', False) and resource.get('url_type', '') == 'datastore'
+
+
+    def datastore_search(self, search_parameters_dict):
+        data_string = urllib.quote(json.dumps(search_parameters_dict))
+        url = self.url + "/api/action/datastore_search"
+        return self.send_request(data_string, url)
+
+
+    def datastore_create(self, data_dict):
+        """Create datastore resource
+        
+        for structure of data_dict:
+        see http://docs.ckan.org/en/ckan-2.2/datastore.html#ckanext.datastore.logic.action.datastore_create
+        """
+        data_string = urllib.quote(json.dumps(data_dict))
+        url = self.url + "/api/action/datastore_create"
+        return self.send_request(data_string, url)
+    
+    
+    def datastore_upsert(self, data_dict):
+        data_string = urllib.quote(json.dumps(data_dict))
+        url = self.url + "/api/action/datastore_upsert"
+        return self.send_request(data_string, url)
+    
+    
+    def datastore_delete(self, resource_id):
+        data_dict = {
+            'resource_id': resource_id,
+            'force': True
+        }
+        data_string = urllib.quote(json.dumps(data_dict))
+        url = self.url + "/api/action/datastore_delete"
+        return self.send_request(data_string, url)
 
 
     def get_package_resource_by_name(self, name, package_id):
@@ -471,6 +508,20 @@ class CkanAPIWrapper():
         dataset = self.get_package(package_id)
         resources = dataset['resources']
         
+        errors = []
         for resource in resources:
             if resource['name'] not in names:
-                self.resource_delete(resource['id'])
+                if self._is_datastore_resource(resource):
+                    try:
+                        self.datastore_delete(resource['id'])
+                    except urllib2.HTTPError, e:
+                        msg = 'Failed to delete datastore resource [{0}]: {1}'\
+                                .format(resource['id'], str(e))
+                        errors.append(msg)
+                try:
+                    self.resource_delete(resource['id'])
+                except urllib2.HTTPError, e:
+                    msg = 'Failed to delete resource [{0}]: {1}'\
+                            .format(resource['id'], str(e))
+                    errors.append(msg)
+        return errors
