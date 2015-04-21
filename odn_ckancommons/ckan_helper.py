@@ -25,7 +25,8 @@ class CkanAPIWrapper():
         assert url
         request = urllib2.Request(url)
         # Creating a dataset requires an authorization header.
-        request.add_header('Authorization', self.api_key)
+        if self.api_key:
+            request.add_header('Authorization', self.api_key)
         # Make the HTTP request.
         response = urllib2.urlopen(request, data_string)
         assert response.code == 200
