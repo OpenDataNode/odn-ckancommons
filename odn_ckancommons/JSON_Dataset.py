@@ -8,6 +8,11 @@ def load_from_dict(package):
     dat.title = package['title']
     dat.notes = package['notes']
     dat.author = package['author']
+    dat.author_email = package['author_email']
+    dat.maintainer = package['maintainer']
+    dat.maintainer_email = package['maintainer_email']
+    dat.url = package['url']
+    dat.version = package['version']
     dat.extras = package['extras']
     dat.resources = package['resources']
     dat.tags = prepare_tags(package['tags'])
@@ -99,6 +104,11 @@ class JSON_Dataset():
         self.title = ''
         self.notes = ''
         self.author = ''
+        self.author_email = ''
+        self.maintainer = ''
+        self.maintainer_email = ''
+        self.url = ''
+        self.version = ''
         self.extras = []
         self.resources = []
         self.tags = []
@@ -109,13 +119,29 @@ class JSON_Dataset():
 
 
     def tostring(self):
-        return   u"[%s] name: [%s] title: [%s] notes: [%s] author: [%s] extras: [%s] resource: [%s] owner_org:[%s]" % (self.__class__.__name__, self.name, self.title , self.notes , self.author, self.extras, self.resources, self.owner_org)
+        return   u"[%s] name: [%s] title: [%s] notes: [%s] author: [%s] author_email: [%s] maintainer: [%s] maintainer_email: [%s] url: [%s] version: [%s] extras: [%s] resource: [%s] owner_org:[%s]" % (self.__class__.__name__, self.name, self.title , self.notes , self.author, self.author_email, self.maintainer, self.maintainer_email, self.url, self.version, self.extras, self.resources, self.owner_org)
 
     def tojson_without_resource(self):
-        return { "name" : self.name, "title" :  self.title, "notes": self.notes, "author": self.author, "extras": self.extras, "license_id" : self.license, "tags": self.tags, "owner_org" : self.owner_org}
+        return {
+            "name" : self.name,
+            "title" :  self.title,
+            "notes": self.notes,
+            "author": self.author,
+            "author_email": self.author_email,
+            "maintainer": self.maintainer,
+            "maintainer_email": self.maintainer_email,
+            "url": self.url,
+            "version": self.version,
+            "extras": self.extras, 
+            "license_id" : self.license,
+            "tags": self.tags, 
+            "owner_org" : self.owner_org,
+        }
 
     def tojson_all(self):
-        return { "name" : self.name, "title" :  self.title, "notes": self.notes, "author": self.author, "extras": self.extras , "license_id"  : self.license, "resources": self.resources, "tags": self.tags, "owner_org" : self.owner_org}
+        dict = self.tojson_without_resource()
+        dict["resources"] = self.resources
+        return dict
 
     def tojson_resource(self):
         if len(self.resources) > 0:
