@@ -177,6 +177,7 @@ class CkanAPIWrapper():
         file = None
         try:
             resource_file_url = data.pop('url')
+            data['url'] = ''
             
             # retrieving file from source
             file = urllib2.urlopen(resource_file_url)
