@@ -3,7 +3,7 @@
 '''
 from setuptools import setup, find_packages
 
-version = '0.5.6-SNAPSHOT'
+version = '0.5.7-SNAPSHOT'
 
 setup(
     name='odn-ckancommons',
