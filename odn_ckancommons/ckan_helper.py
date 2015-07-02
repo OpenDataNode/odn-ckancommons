@@ -29,12 +29,12 @@ class CkanAPIWrapper():
             request.add_header('Authorization', self.api_key)
         # Make the HTTP request.
         response = urllib2.urlopen(request, data_string)
-        response.close()
         assert response.code == 200
         # Use the json module to load CKAN's response into a dictionary.
         response_dict = json.loads(response.read())
         if response.url != url:
             response_dict['_redirected_to'] = response.url
+        response.close()
         return response_dict
     
     
