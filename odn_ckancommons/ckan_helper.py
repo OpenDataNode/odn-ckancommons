@@ -32,6 +32,9 @@ class CkanAPIWrapper():
         assert response.code == 200
         # Use the json module to load CKAN's response into a dictionary.
         response_dict = json.loads(response.read())
+        if response.url != url:
+            response_dict['_redirected_to'] = response.url
+        response.close()
         return response_dict
     
     
@@ -42,6 +45,42 @@ class CkanAPIWrapper():
         # package_create returns the created package as its result.
         return response_dict['result']
     
+    
+    def site_read(self):
+        '''
+        For checking if url is CKAN site
+        
+        :return: true if correct url
+        '''
+        url = self.url + "/api/action/site_read"
+        try:
+            resp = self._send_request('', url)
+            redirected = None
+            if resp.has_key('_redirected_to'):
+                redirected = resp['_redirected_to'].split("/api/action/site_read")[0]
+            return resp['result'], redirected
+        except (urllib2.HTTPError, urllib2.URLError):
+            return False
+    
+    
+    def has_edit_rights(self, organization_id_or_name):
+        '''
+        Checks if the the user (api_key in constructor) has edit rights
+        in the organization given
+        
+        :param organization_id_or_name: id or name of organization
+        :type organization_id_or_name: string
+        
+        :return: True if has edit rights, False otherwise 
+        '''
+        url = self.url + "/api/action/organization_list_for_user"
+        resp = self.send_request('', url)
+        for organization in resp:
+            if organization['id'] == organization_id_or_name or \
+                organization['name'] == organization_id_or_name:
+                return True
+        return False
+
     
     def package_create(self, dataset):
         assert dataset
@@ -351,7 +390,7 @@ class CkanAPIWrapper():
             else:
                 raise e
     
-    
+
     def get_resource(self, resource_id):
         assert resource_id
         res_dict = {'id': resource_id}
@@ -468,6 +507,20 @@ class CkanAPIWrapper():
         data_string = urllib.quote(json.dumps(dataset_dict))
         url = self.url + '/api/action/organization_show'
         return self.send_request(data_string, url)
+    
+    # redirection safe
+    def organization_show2(self, package_id):
+        assert package_id
+        url = self.url + '/api/action/organization_show?id={0}'.format(package_id)
+        # url = urllib.quote(url) ?
+        try:
+            return self.send_request('', url)
+        except urllib2.HTTPError, e:
+            if str(e).find('Not Found'):
+                return None
+            else:
+                raise e
+    
 
     def organization_update(self, organization):
         assert organization
