@@ -60,7 +60,7 @@ class CkanAPIWrapper():
                 redirected = resp['_redirected_to'].split("/api/action/site_read")[0]
             return resp['result'], redirected
         except (urllib2.HTTPError, urllib2.URLError):
-            return False
+            return False, None
     
     
     def has_edit_rights(self, organization_id_or_name):
