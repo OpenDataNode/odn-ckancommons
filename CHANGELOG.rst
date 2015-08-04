@@ -2,7 +2,12 @@
 Changelog
 ---------
 
-v0.5.7 2015-06-23
+v0.5.7 2015-07-15
+
+Bug Fixes:
+ * fixed return value when checking CKAN site status of non responding CKAN or URL of this CKAN is wrong (for ic2pc plugin)
+
+v0.5.6 2015-06-23
 
 New Features:
  * Added site_read for checking if the url given belongs to CKAN
