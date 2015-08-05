@@ -2,6 +2,11 @@
 Changelog
 ---------
 
+v0.5.8 2015-08-05
+
+Bug Fixes:
+ * ckan_helper.has_edit_rights checked if the user had admin rights on organization, fixed to check rights to create and edit datasets
+
 v0.5.7 2015-07-15
 
 Bug Fixes:
