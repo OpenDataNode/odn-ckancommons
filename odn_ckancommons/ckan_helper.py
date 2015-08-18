@@ -66,7 +66,7 @@ class CkanAPIWrapper():
     def has_edit_rights(self, organization_id_or_name):
         '''
         Checks if the the user (api_key in constructor) has edit rights
-        in the organization given
+        in the organization given (to create and edit datasets)
         
         :param organization_id_or_name: id or name of organization
         :type organization_id_or_name: string
@@ -74,7 +74,9 @@ class CkanAPIWrapper():
         :return: True if has edit rights, False otherwise 
         '''
         url = self.url + "/api/action/organization_list_for_user"
-        resp = self.send_request('', url)
+        data_string = urllib.quote(json.dumps({u"permission":u"create_dataset"}))
+        
+        resp = self.send_request(data_string, url)
         for organization in resp:
             if organization['id'] == organization_id_or_name or \
                 organization['name'] == organization_id_or_name:
