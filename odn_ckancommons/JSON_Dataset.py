@@ -116,7 +116,6 @@ class JSON_Dataset():
         # license is creative commons by default 
         self.license = 'cc-by'
         self.owner_org = []
-        self.organization = []
         self.private = False
 
 
