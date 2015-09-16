@@ -20,6 +20,7 @@ def load_from_dict(package):
     dat.license = package['license_id']
     dat.owner_org = package['owner_org']
     dat.organization = package['organization']
+    dat.private = package['private']
     return dat
 
 
@@ -116,10 +117,11 @@ class JSON_Dataset():
         self.license = 'cc-by'
         self.owner_org = []
         self.organization = []
+        self.private = False
 
 
     def tostring(self):
-        return   u"[%s] name: [%s] title: [%s] notes: [%s] author: [%s] author_email: [%s] maintainer: [%s] maintainer_email: [%s] url: [%s] version: [%s] extras: [%s] resource: [%s] owner_org:[%s]" % (self.__class__.__name__, self.name, self.title , self.notes , self.author, self.author_email, self.maintainer, self.maintainer_email, self.url, self.version, self.extras, self.resources, self.owner_org)
+        return   u"[%s] name: [%s] title: [%s] notes: [%s] author: [%s] author_email: [%s] maintainer: [%s] maintainer_email: [%s] url: [%s] version: [%s] extras: [%s] resource: [%s] owner_org:[%s] private:[%s]" % (self.__class__.__name__, self.name, self.title , self.notes , self.author, self.author_email, self.maintainer, self.maintainer_email, self.url, self.version, self.extras, self.resources, self.owner_org, self.private)
 
     def tojson_without_resource(self):
         return {
@@ -136,6 +138,7 @@ class JSON_Dataset():
             "license_id" : self.license,
             "tags": self.tags, 
             "owner_org" : self.owner_org,
+            "private" : self.private
         }
 
     def tojson_all(self):
