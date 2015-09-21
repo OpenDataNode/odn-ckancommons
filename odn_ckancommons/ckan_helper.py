@@ -7,8 +7,6 @@ import urllib2
 import urllib
 import requests
 
-# TODO tags
-
 class CkanAPIWrapper(): 
     '''
     This class uses API interface to return, create, update, delete, search for datasets
@@ -387,7 +385,7 @@ class CkanAPIWrapper():
         try:
             return self.send_request(data_string, url)
         except urllib2.HTTPError, e:
-            if str(e).find('Not Found'):
+            if e.code == 404: # Not Found
                 return None
             else:
                 raise e
@@ -401,7 +399,7 @@ class CkanAPIWrapper():
         try:
             return self.send_request(data_string, url)
         except urllib2.HTTPError, e:
-            if str(e).find('Not Found'):
+            if e.code == 404: # Not Found
                 return None
             else:
                 raise e
@@ -514,11 +512,10 @@ class CkanAPIWrapper():
     def organization_show2(self, package_id):
         assert package_id
         url = self.url + '/api/action/organization_show?id={0}'.format(package_id)
-        # url = urllib.quote(url) ?
         try:
             return self.send_request('', url)
         except urllib2.HTTPError, e:
-            if str(e).find('Not Found'):
+            if e.code == 404: # Not Found
                 return None
             else:
                 raise e
