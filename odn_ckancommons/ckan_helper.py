@@ -21,19 +21,27 @@ class CkanAPIWrapper():
         
     def _send_request(self, data_string, url):
         assert url
+        
+        if data_string:
+            data_string = urllib.quote(data_string)
+        
         request = urllib2.Request(url)
         # Creating a dataset requires an authorization header.
         if self.api_key:
             request.add_header('Authorization', self.api_key)
-        # Make the HTTP request.
-        response = urllib2.urlopen(request, data_string)
-        assert response.code == 200
-        # Use the json module to load CKAN's response into a dictionary.
-        response_dict = json.loads(response.read())
-        if response.url != url:
-            response_dict['_redirected_to'] = response.url
-        response.close()
-        return response_dict
+        response = None
+        try:
+            # Make the HTTP request.
+            response = urllib2.urlopen(request, data_string)
+            assert response.code == 200
+            # Use the json module to load CKAN's response into a dictionary.
+            response_dict = json.loads(response.read())
+            if response.url != url:
+                response_dict['_redirected_to'] = response.url
+            return response_dict
+        finally:
+            if response:
+                response.close()
     
     
     def send_request(self, data_string, url):
@@ -72,7 +80,7 @@ class CkanAPIWrapper():
         :return: True if has edit rights, False otherwise 
         '''
         url = self.url + "/api/action/organization_list_for_user"
-        data_string = urllib.quote(json.dumps({u"permission":u"create_dataset"}))
+        data_string = json.dumps({u"permission":u"create_dataset"})
         
         resp = self.send_request(data_string, url)
         for organization in resp:
@@ -85,7 +93,7 @@ class CkanAPIWrapper():
     def package_create(self, dataset):
         assert dataset
         dataset_dict = dataset.tojson_without_resource()
-        data_string = urllib.quote(json.dumps(dataset_dict))
+        data_string = json.dumps(dataset_dict)
         url = self.url + "/api/action/package_create"
         return self.send_request(data_string, url)
 
@@ -101,7 +109,7 @@ class CkanAPIWrapper():
         '''
         assert dataset
         dataset_dict = dataset.tojson_without_resource()
-        data_string = urllib.quote(json.dumps(dataset_dict))
+        data_string = json.dumps(dataset_dict)
         url = self.url + "/api/action/package_update"
         return self.send_request(data_string, url)
  
@@ -126,7 +134,7 @@ class CkanAPIWrapper():
         package = self.get_package(package_id)
         assert package
         package.update(data_to_change)
-        data_string = urllib.quote(json.dumps(package))
+        data_string = json.dumps(package)
         url = self.url + '/api/action/package_update'
         return self.send_request(data_string, url)
     
@@ -139,7 +147,7 @@ class CkanAPIWrapper():
             # needs to do multipart-form-data request
             return self.resource_create_update_with_upload(url, resource)
         
-        data_string = urllib.quote(json.dumps(resource))
+        data_string = json.dumps(resource)
         return self.send_request(data_string, url)
         
         
@@ -158,7 +166,7 @@ class CkanAPIWrapper():
             # needs to do multipart-form-data request
             return self.resource_create_update_with_upload(url, resource)
         
-        data_string = urllib.quote(json.dumps(resource))
+        data_string = json.dumps(resource)
         return self.send_request(data_string, url)
 
 
@@ -169,7 +177,7 @@ class CkanAPIWrapper():
         :type resource_id: string
         '''
         assert resource_id
-        data_string = urllib.quote(json.dumps({'id':resource_id}))
+        data_string = json.dumps({'id':resource_id})
         url = self.url + "/api/action/resource_delete"
         return self.send_request(data_string, url)
 
@@ -193,7 +201,7 @@ class CkanAPIWrapper():
         resource = self.get_resource(resource_id)
         assert resource
         resource.update(data_to_change)
-        data_string = urllib.quote(json.dumps(resource))
+        data_string = json.dumps(resource)
         url = self.url + '/api/action/resource_update'
         return self.send_request(data_string, url)
     
@@ -239,7 +247,7 @@ class CkanAPIWrapper():
         assert name
         dataset_dict = {}
         dataset_dict['query'] = 'name:' + name 
-        data_string = urllib.quote(json.dumps(dataset_dict))
+        data_string = json.dumps(dataset_dict)
         url = self.url + "/api/action/resource_search"
         result_ckan = self.send_request(data_string, url)      
         
@@ -260,7 +268,7 @@ class CkanAPIWrapper():
 
 
     def datastore_search(self, search_parameters_dict):
-        data_string = urllib.quote(json.dumps(search_parameters_dict))
+        data_string = json.dumps(search_parameters_dict)
         url = self.url + "/api/action/datastore_search"
         return self.send_request(data_string, url)
 
@@ -271,13 +279,13 @@ class CkanAPIWrapper():
         for structure of data_dict:
         see http://docs.ckan.org/en/ckan-2.2/datastore.html#ckanext.datastore.logic.action.datastore_create
         """
-        data_string = urllib.quote(json.dumps(data_dict))
+        data_string = json.dumps(data_dict)
         url = self.url + "/api/action/datastore_create"
         return self.send_request(data_string, url)
     
     
     def datastore_upsert(self, data_dict):
-        data_string = urllib.quote(json.dumps(data_dict))
+        data_string = json.dumps(data_dict)
         url = self.url + "/api/action/datastore_upsert"
         return self.send_request(data_string, url)
     
@@ -287,7 +295,7 @@ class CkanAPIWrapper():
             'resource_id': resource_id,
             'force': True
         }
-        data_string = urllib.quote(json.dumps(data_dict))
+        data_string = json.dumps(data_dict)
         url = self.url + "/api/action/datastore_delete"
         return self.send_request(data_string, url)
 
@@ -319,7 +327,7 @@ class CkanAPIWrapper():
         assert dataset
         dataset_dict = {}
         dataset_dict['q'] = 'name:' + dataset.name
-        data_string = urllib.quote(json.dumps(dataset_dict))
+        data_string = json.dumps(dataset_dict)
         url = self.url + "/api/action/package_search"
         result = self.send_request(data_string, url)   
         
@@ -357,7 +365,7 @@ class CkanAPIWrapper():
     def package_delete(self, package_id):
         assert package_id
         url = self.url + '/api/action/package_delete'
-        data_string = urllib.quote(json.dumps({'id': package_id}))
+        data_string = json.dumps({'id': package_id})
         self.send_request(data_string, url)
     
     
@@ -369,7 +377,7 @@ class CkanAPIWrapper():
         if offset:
             dataset_dict['offset'] = offset
         
-        data_string = urllib.quote(json.dumps(dataset_dict))
+        data_string = json.dumps(dataset_dict)
         url = self.url + '/api/action/package_list'
         return self.send_request(data_string, url)
     
@@ -380,7 +388,7 @@ class CkanAPIWrapper():
             'id': package_id,
             'use_default_schema':True,
         }
-        data_string = urllib.quote(json.dumps(dataset_dict))
+        data_string = json.dumps(dataset_dict)
         url = self.url + '/api/action/package_show'
         try:
             return self.send_request(data_string, url)
@@ -394,7 +402,7 @@ class CkanAPIWrapper():
     def get_resource(self, resource_id):
         assert resource_id
         res_dict = {'id': resource_id}
-        data_string = urllib.quote(json.dumps(res_dict))
+        data_string = json.dumps(res_dict)
         url = self.url + '/api/action/resource_show'
         try:
             return self.send_request(data_string, url)
@@ -428,7 +436,7 @@ class CkanAPIWrapper():
                     url = self.url + '/api/action/revision_show'
                     print '[%d / %d] %s' % (i, len(revision_ids), revision_id,)
                     try:
-                        data_string = urllib.quote(json.dumps({'id': revision_id}))
+                        data_string = json.dumps({'id': revision_id})
                         revision = self.send_request(data_string, url)
                     except Exception, e:
                         print 'Unable to get content for URL: %s: %s' % (url, str(e),)
@@ -478,7 +486,7 @@ class CkanAPIWrapper():
             query += " modified:" + modified
             
         dataset_dict['q'] = 'name:' + dataset.name + " modified:" + modified
-        data_string = urllib.quote(json.dumps(dataset_dict))
+        data_string = json.dumps(dataset_dict)
         url = self.url + "/api/action/package_search"
         result = self.send_request(data_string, url)        
         if result['count'] > 0:
@@ -492,7 +500,7 @@ class CkanAPIWrapper():
     def organization_create(self, organization):
         assert organization
         organizations = {'name': organization}
-        data_string = urllib.quote(json.dumps(organizations))
+        data_string = json.dumps(organizations)
         url = self.url + "/api/action/organization_create"
         return self.send_request(data_string, url)
 
@@ -504,7 +512,7 @@ class CkanAPIWrapper():
         dataset_dict = {
             'id': id
         }
-        data_string = urllib.quote(json.dumps(dataset_dict))
+        data_string = json.dumps(dataset_dict)
         url = self.url + '/api/action/organization_show'
         return self.send_request(data_string, url)
     
@@ -523,18 +531,18 @@ class CkanAPIWrapper():
 
     def organization_update(self, organization):
         assert organization
-        data_string = urllib.quote(json.dumps(organization))
+        data_string = json.dumps(organization)
         url = self.url + "/api/action/organization_update"
         return self.send_request(data_string, url)
 
     def organization_delete(self, org_id):
         assert org_id
         url = self.url + '/api/action/organization_delete'
-        data_string = urllib.quote(json.dumps({'id': org_id}))
+        data_string = json.dumps({'id': org_id})
         self.send_request(data_string, url)
 
         url = self.url + '/api/action/organization_purge'
-        data_string = urllib.quote(json.dumps({'id': org_id}))
+        data_string = json.dumps({'id': org_id})
         self.send_request(data_string, url)
 
     def find_organization(self, organization_name):
