@@ -2,6 +2,17 @@
 Changelog
 ---------
 
+v1.2.0 2015-09-23
+
+Notes:
+ * Version jumped to 1.2.0 in order to align with tags / ODN releases
+
+New Features:
+ * Can synchronize private [boolean] parameter now
+
+Bug Fixes:
+ * fixed request not closed when internal error
+
 v0.5.8 2015-08-05
 
 Bug Fixes:

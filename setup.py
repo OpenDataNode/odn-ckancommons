@@ -3,7 +3,7 @@
 '''
 from setuptools import setup, find_packages
 
-version = '1.1.2'
+version = '1.2.0'
 
 setup(
     name='odn-ckancommons',
