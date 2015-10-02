@@ -236,7 +236,8 @@ class CkanAPIWrapper():
                           headers={'X-CKAN-API-Key':self.api_key}, verify=False,
                         files=[('upload', file)])
             response = json.loads(response.content)
-            assert response['success'] is True
+            if response['success'] == False:
+                raise Exception(response.get('error', {}).values())
             return response['result']
         finally:
             if file:
