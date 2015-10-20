@@ -2,6 +2,11 @@
 Changelog
 ---------
 
+v1.2.1 2015-10-02
+
+Bug Fixes:
+ * When uploading file to resource and its size is bigger than allowed be CKAN, clearer error message is returned
+
 v1.2.0 2015-09-23
 
 Notes:
