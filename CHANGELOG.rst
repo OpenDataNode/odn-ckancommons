@@ -2,6 +2,9 @@
 Changelog
 ---------
 
+v1.2.2 2015-12-17
+ * state parameter added to dataset object [OpenDataNode/open-data-node#110]
+
 v1.2.1 2015-10-02
 
 Bug Fixes:

@@ -21,6 +21,7 @@ def load_from_dict(package):
     dat.owner_org = package['owner_org']
     dat.organization = package['organization']
     dat.private = package['private']
+    dat.state = package['state']
     return dat
 
 
@@ -118,15 +119,16 @@ class JSON_Dataset():
         self.owner_org = []
         self.organization = []
         self.private = False
+        self.state = 'active'
 
 
     def tostring(self):
-        return   u"[%s] name: [%s] title: [%s] notes: [%s] author: [%s] author_email: [%s] maintainer: [%s] maintainer_email: [%s] url: [%s] version: [%s] extras: [%s] resource: [%s] owner_org:[%s] private:[%s]" % (self.__class__.__name__, self.name, self.title , self.notes , self.author, self.author_email, self.maintainer, self.maintainer_email, self.url, self.version, self.extras, self.resources, self.owner_org, self.private)
+        return   u"[%s] name: [%s] title: [%s] state: [%s] notes: [%s] author: [%s] author_email: [%s] maintainer: [%s] maintainer_email: [%s] url: [%s] version: [%s] extras: [%s] resource: [%s] owner_org:[%s] private:[%s]" % (self.__class__.__name__, self.name, self.title, self.state , self.notes , self.author, self.author_email, self.maintainer, self.maintainer_email, self.url, self.version, self.extras, self.resources, self.owner_org, self.private)
 
     def tojson_without_resource(self):
         return {
-            "name" : self.name,
-            "title" :  self.title,
+            "name": self.name,
+            "title":  self.title,
             "notes": self.notes,
             "author": self.author,
             "author_email": self.author_email,
@@ -135,10 +137,11 @@ class JSON_Dataset():
             "url": self.url,
             "version": self.version,
             "extras": self.extras, 
-            "license_id" : self.license,
+            "license_id": self.license,
             "tags": self.tags, 
-            "owner_org" : self.owner_org,
-            "private" : self.private
+            "owner_org": self.owner_org,
+            "private": self.private,
+            "state": self.state
         }
 
     def tojson_all(self):
