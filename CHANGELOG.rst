@@ -1,6 +1,9 @@
 ---------
 Changelog
 ---------
+v1.2.4 2016-3-17
+ * support urllib2 in version in version lower then 2.7.9 [OpenDataNode/ckanext-odn-ic2pc-sync#15]
+ 
 v1.2.3 2016-3-17
  * added support certificate validation [OpenDataNode/ckanext-odn-ic2pc-sync#15]
 
