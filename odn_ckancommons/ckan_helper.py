@@ -7,14 +7,11 @@ import urllib2
 import urllib
 import requests
 import ssl
-import sys
-def is_python_in_2_7_9():
-    return sys.version[:5] >=  "2.7.9"
-    
-if is_python_in_2_7_9():
-    ssl_ctx = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
-    ssl_ctx.verify_mode = ssl.CERT_REQUIRED
-    ssl_ctx.load_verify_locations("/etc/ssl/certs/ca-certificates.crt")
+ssl_ctx = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+ssl_ctx.verify_mode = ssl.CERT_REQUIRED
+CERTS="/etc/ssl/certs/ca-certificates.crt"
+ssl_ctx.load_verify_locations(cafile=CERTS)
+
 
 class CkanAPIWrapper(): 
     '''
@@ -41,11 +38,7 @@ class CkanAPIWrapper():
         response = None
         try:
             # Make the HTTP request.
-            if is_python_in_2_7_9():
-                response = urllib2.urlopen(request, data_string, context=ssl_ctx)
-            else:
-                response = urllib2.urlopen(request, data_string)
-                
+            response = urllib2.urlopen(request, data_string, context=ssl_ctx)
             assert response.code == 200
             # Use the json module to load CKAN's response into a dictionary.
             response_dict = json.loads(response.read())
@@ -240,26 +233,14 @@ class CkanAPIWrapper():
             data['url'] = ''
             
             # retrieving file from source
-            if is_python_in_2_7_9():
-                file = urllib2.urlopen(resource_file_url,context=ssl_ctx)
-            else:
-                file = urllib2.urlopen(resource_file_url)
-            
+            file = urllib2.urlopen(resource_file_url,context=ssl_ctx)
             file.name = resource_file_url.split('/')[-1]
             
             # uploading file
-            if is_python_in_2_7_9():
-                response = requests.post(url,
-                              data=data,
-                              headers={'X-CKAN-API-Key':self.api_key}, verify=CERTS,
-                            files=[('upload', file)])
-                            
-            else:
-                 response = requests.post(url,
-                              data=data,
-                              headers={'X-CKAN-API-Key':self.api_key}, verify=false,
-                            files=[('upload', file)])
-                
+            response = requests.post(url,
+                          data=data,
+                          headers={'X-CKAN-API-Key':self.api_key}, verify=CERTS,
+                        files=[('upload', file)])
             response = json.loads(response.content)
             if response['success'] == False:
                 raise Exception(response.get('error', {}).values())
