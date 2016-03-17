@@ -6,6 +6,12 @@ import json
 import urllib2
 import urllib
 import requests
+import ssl
+ssl_ctx = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+ssl_ctx.verify_mode = ssl.CERT_REQUIRED
+CERTS="/etc/ssl/certs/ca-certificates.crt"
+ssl_ctx.load_verify_locations(cafile=CERTS)
+
 
 class CkanAPIWrapper(): 
     '''
@@ -32,7 +38,7 @@ class CkanAPIWrapper():
         response = None
         try:
             # Make the HTTP request.
-            response = urllib2.urlopen(request, data_string)
+            response = urllib2.urlopen(request, data_string, context=ssl_ctx)
             assert response.code == 200
             # Use the json module to load CKAN's response into a dictionary.
             response_dict = json.loads(response.read())
@@ -227,13 +233,13 @@ class CkanAPIWrapper():
             data['url'] = ''
             
             # retrieving file from source
-            file = urllib2.urlopen(resource_file_url)
+            file = urllib2.urlopen(resource_file_url,context=ssl_ctx)
             file.name = resource_file_url.split('/')[-1]
             
             # uploading file
             response = requests.post(url,
                           data=data,
-                          headers={'X-CKAN-API-Key':self.api_key}, verify=False,
+                          headers={'X-CKAN-API-Key':self.api_key}, verify=CERTS,
                         files=[('upload', file)])
             response = json.loads(response.content)
             if response['success'] == False:

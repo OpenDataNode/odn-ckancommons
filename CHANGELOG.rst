@@ -1,6 +1,8 @@
 ---------
 Changelog
 ---------
+v1.2.3 2016-3-17
+ * added support certificate validation [OpenDataNode/ckanext-odn-ic2pc-sync#15]
 
 v1.2.2 2015-12-17
  * state parameter added to dataset object [OpenDataNode/open-data-node#110]
