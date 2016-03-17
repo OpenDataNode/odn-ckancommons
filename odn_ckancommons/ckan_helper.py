@@ -257,7 +257,7 @@ class CkanAPIWrapper():
             else:
                  response = requests.post(url,
                               data=data,
-                              headers={'X-CKAN-API-Key':self.api_key}, verify=false,
+                              headers={'X-CKAN-API-Key':self.api_key}, verify=False,
                             files=[('upload', file)])
                 
             response = json.loads(response.content)
