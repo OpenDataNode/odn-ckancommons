@@ -14,7 +14,8 @@ def is_python_in_2_7_9():
 if is_python_in_2_7_9():
     ssl_ctx = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
     ssl_ctx.verify_mode = ssl.CERT_REQUIRED
-    ssl_ctx.load_verify_locations("/etc/ssl/certs/ca-certificates.crt")
+    CERTS="/etc/ssl/certs/ca-certificates.crt"
+    ssl_ctx.load_verify_locations(CERTS)
 
 class CkanAPIWrapper(): 
     '''
