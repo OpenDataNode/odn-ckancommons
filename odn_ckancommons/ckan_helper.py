@@ -249,10 +249,17 @@ class CkanAPIWrapper():
             file.name = resource_file_url.split('/')[-1]
             
             # uploading file
-            response = requests.post(url,
-                        data=data,
-                        headers={'X-CKAN-API-Key':self.api_key}, verify=False,
-                        files=[('upload', file)])
+            if is_python_in_2_7_9():
+                response = requests.post(url,
+                              data=data,
+                              headers={'X-CKAN-API-Key':self.api_key}, verify=CERTS,
+                            files=[('upload', file)])
+                            
+            else:
+                 response = requests.post(url,
+                              data=data,
+                              headers={'X-CKAN-API-Key':self.api_key}, verify=False,
+                            files=[('upload', file)])
                 
             response = json.loads(response.content)
             if response['success'] == False:
