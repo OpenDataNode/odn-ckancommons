@@ -1,6 +1,12 @@
 ---------
 Changelog
 ---------
+v1.3.1 2016-08-01
+ * removed certificate verification during update of resources, because problem with publishing resource to public catalog
+ 
+v1.3.0 2016-08-01
+ * added certificate verification during update of resources
+ 
 v1.2.4 2016-3-17
  * support urllib2 in version in version lower then 2.7.9 [OpenDataNode/ckanext-odn-ic2pc-sync#15]
  
